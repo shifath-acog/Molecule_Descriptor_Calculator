@@ -139,9 +139,9 @@ export function DescriptorCalculator() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="1D/2D">1D/2D</SelectItem>
-                  <SelectItem value="3D">3D</SelectItem>
-                  <SelectItem value="FF-based">FF-based</SelectItem>
-                  <SelectItem value="QM-based">QM-based</SelectItem>
+                  <SelectItem value="3D" disabled>3D</SelectItem>
+                  <SelectItem value="FF-based" disabled>FF-based</SelectItem>
+                  <SelectItem value="QM-based" disabled>QM-based</SelectItem>
                 </SelectContent>
               </Select>
             </div>
