@@ -107,7 +107,7 @@ export function DescriptorCalculator() {
           {/* File Upload */}
           <div>
             <Label htmlFor="file-upload" className="block mb-2 text-gray-700 dark:text-gray-200">
-              Upload CSV File (Max 50,000 entries)
+              Upload CSV File 
             </Label>
             <div className="flex items-center gap-4">
               <Button
@@ -207,3 +207,4 @@ export function DescriptorCalculator() {
     </div>
   )
 }
+
