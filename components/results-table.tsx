@@ -114,22 +114,27 @@ export function ResultsTable({ results, columns }: ResultsTableProps) {
     <div className="space-y-4 mt-4">
       {/* Export Controls */}
       <div className="flex items-center justify-end gap-3">
-        <Button variant="outline" className="flex items-center gap-2" onClick={handleExport} disabled={isExporting}>
+        <Button
+          variant="outline"
+          className="flex items-center gap-2 text-gray-700 dark:text-gray-200"
+          onClick={handleExport}
+          disabled={isExporting}
+        >
           <Download className="h-4 w-4" />
           Export as CSV
         </Button>
       </div>
 
       {/* Table */}
-      <div className="rounded-md border overflow-hidden">
+      <div className="rounded-md border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader>
+            <TableHeader className="bg-gray-100 dark:bg-gray-800">
               <TableRow>
                 {displayColumns.map((column) => (
                   <TableHead
                     key={column}
-                    className="text-left whitespace-normal break-words p-2 bg-gray-100 font-semibold cursor-pointer"
+                    className="text-left whitespace-normal break-words p-2 font-semibold cursor-pointer text-gray-700 dark:text-gray-200"
                     onClick={() => handleSort(column)}
                     style={{ minWidth: column === "SMILES" || column === "Structure" ? "200px" : "120px" }}
                   >
@@ -150,7 +155,7 @@ export function ResultsTable({ results, columns }: ResultsTableProps) {
                         type="text"
                         defaultValue={columnFilters[column] || ""}
                         onChange={(e) => debouncedFilterChange(column, e.target.value)}
-                        className="text-sm h-7 w-32 py-1 px-2"
+                        className="text-sm h-7 w-32 py-1 px-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                         onClick={(e) => e.stopPropagation()}
                       />
                     )}
@@ -158,14 +163,14 @@ export function ResultsTable({ results, columns }: ResultsTableProps) {
                 ))}
               </TableRow>
             </TableHeader>
-            <TableBody>
+            <TableBody className="bg-white dark:bg-gray-800">
               {paginatedResults.length > 0 ? (
                 paginatedResults.map((result, rowIndex) => (
-                  <TableRow key={rowIndex} className="hover:bg-gray-50">
+                  <TableRow key={rowIndex} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     {displayColumns.map((column, colIndex) => (
                       <TableCell
                         key={column}
-                        className="p-2 align-top break-words"
+                        className="p-2 align-top break-words text-gray-700 dark:text-gray-200"
                         style={{ maxWidth: column === "SMILES" || column === "Structure" ? "230px" : "150px" }}
                       >
                         {column === "Structure" ? (
@@ -173,12 +178,12 @@ export function ResultsTable({ results, columns }: ResultsTableProps) {
                             <img
                               src={result[column] || "/placeholder.svg"}
                               alt="Structure"
-                              className="rounded-md border border-gray-200 w-12 h-12 cursor-pointer"
+                              className="rounded-md border border-gray-200 dark:border-gray-600 w-12 h-12 cursor-pointer"
                               loading="lazy"
                               onClick={() => handleImageClick(rowIndex, colIndex, result[column])}
                             />
                           ) : (
-                            <span className="text-gray-500">No image available</span>
+                            <span className="text-gray-500 dark:text-gray-400">No image available</span>
                           )
                         ) : (
                           <div className="text-sm whitespace-normal break-words">
@@ -195,7 +200,7 @@ export function ResultsTable({ results, columns }: ResultsTableProps) {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={displayColumns.length} className="h-24 text-center">
+                  <TableCell colSpan={displayColumns.length} className="h-24 text-center text-gray-700 dark:text-gray-200">
                     No molecules pass the filter.
                   </TableCell>
                 </TableRow>
@@ -207,7 +212,7 @@ export function ResultsTable({ results, columns }: ResultsTableProps) {
 
       {/* Pagination */}
       {Math.ceil(sortedResults.length / itemsPerPage) > 1 && (
-        <Pagination>
+        <Pagination className="text-gray-700 dark:text-gray-200">
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
@@ -216,8 +221,10 @@ export function ResultsTable({ results, columns }: ResultsTableProps) {
                     setCurrentPage(currentPage - 1)
                   }
                 }}
-                className={`cursor-pointer ${currentPage === 1 ? "pointer-events-none opacity-50" : ""}`}
-              />
+                className={`cursor-pointer ${currentPage === 1 ? "pointer-events-none opacity-50" : ""} bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md px-3 py-1`}
+              >
+                Previous
+              </PaginationPrevious>
             </PaginationItem>
             {Array.from(
               { length: Math.ceil(sortedResults.length / itemsPerPage) },
@@ -229,7 +236,7 @@ export function ResultsTable({ results, columns }: ResultsTableProps) {
                   <PaginationLink
                     onClick={() => setCurrentPage(page)}
                     isActive={currentPage === page}
-                    className="cursor-pointer"
+                    className={`cursor-pointer ${currentPage === page ? "bg-gray-200 dark:bg-gray-500" : "bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"} text-gray-700 dark:text-gray-200 rounded-md px-3 py-1`}
                   >
                     {page}
                   </PaginationLink>
@@ -244,8 +251,10 @@ export function ResultsTable({ results, columns }: ResultsTableProps) {
                 }}
                 className={`cursor-pointer ${
                   currentPage === Math.ceil(sortedResults.length / itemsPerPage) ? "pointer-events-none opacity-50" : ""
-                }`}
-              />
+                } bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md px-3 py-1`}
+              >
+                Next
+              </PaginationNext>
             </PaginationItem>
           </PaginationContent>
         </Pagination>
@@ -253,18 +262,24 @@ export function ResultsTable({ results, columns }: ResultsTableProps) {
 
       {/* Image Modal */}
       {expandedImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeModal}>
-          <div className="bg-white p-4 rounded-lg max-w-4xl max-h-screen overflow-auto" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={closeModal}
+        >
+          <div
+            className="bg-white dark:bg-gray-800 p-4 rounded-lg max-w-4xl max-h-screen overflow-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium">Structure View</h3>
+              <h3 className="text-lg font-medium text-gray-700 dark:text-gray-200">Structure View</h3>
               <Button variant="ghost" size="sm" onClick={closeModal} className="p-1">
-                <X className="h-5 w-5" />
+                <X className="h-5 w-5 text-gray-700 dark:text-gray-200" />
               </Button>
             </div>
             <div className="flex items-center justify-center">
-              <img 
-                src={expandedImage.src} 
-                alt="Expanded Structure" 
+              <img
+                src={expandedImage.src}
+                alt="Expanded Structure"
                 className="max-h-96 max-w-full object-contain rounded-md"
               />
             </div>
