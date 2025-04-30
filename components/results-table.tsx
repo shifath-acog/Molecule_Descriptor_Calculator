@@ -23,7 +23,9 @@ interface ResultsTableProps {
 
 export function ResultsTable({ results, columns }: ResultsTableProps) {
   const [currentPage, setCurrentPage] = useState(1)
-  const [columnFilters, setColumnFilters] = useState<{ [key: string]: string }>({})
+  const [filters, setFilters] = useState<{
+    [key: string]: { text?: string; min?: number; max?: number }
+  }>({})
   const [sortConfig, setSortConfig] = useState<{ key: string | null; direction: "asc" | "desc" | null }>({
     key: null,
     direction: null,
@@ -38,16 +40,34 @@ export function ResultsTable({ results, columns }: ResultsTableProps) {
     [columns]
   )
 
+  // Define non-numerical columns (only SMILES and Structure)
+  const nonNumericalColumns = useMemo(() => ["SMILES", "Structure"], [])
+
   const filteredResults = useMemo(
     () =>
       results.filter((result) =>
         displayColumns.every((col) => {
-          const filterValue = columnFilters[col]?.toLowerCase() ?? ""
+          const filter = filters[col] || {}
           const cellValue = result[col]
-          return !filterValue || cellValue?.toString().toLowerCase().includes(filterValue)
+          const isNonNumerical = nonNumericalColumns.includes(col)
+
+          // Apply text filter for non-numerical columns
+          if (isNonNumerical && filter.text) {
+            return cellValue?.toString().toLowerCase().includes(filter.text.toLowerCase())
+          }
+
+          // Apply numerical filter for all other columns
+          if (!isNonNumerical) {
+            const numValue = Number(cellValue)
+            const min = filter.min || Number.NEGATIVE_INFINITY
+            const max = filter.max || Number.POSITIVE_INFINITY
+            return !isNaN(numValue) && numValue >= min && numValue <= max
+          }
+
+          return true
         })
       ),
-    [results, columnFilters, displayColumns]
+    [results, filters, displayColumns, nonNumericalColumns]
   )
 
   const sortedResults = useMemo(() => {
@@ -93,10 +113,17 @@ export function ResultsTable({ results, columns }: ResultsTableProps) {
     setIsExporting(false)
   }
 
+  // Unified debounce function for all filter types
   const debouncedFilterChange = useMemo(
     () =>
-      debounce((col: string, value: string) => {
-        setColumnFilters((prev) => ({ ...prev, [col]: value }))
+      debounce((col: string, type: "text" | "min" | "max", value: string) => {
+        setFilters((prev) => ({
+          ...prev,
+          [col]: {
+            ...prev[col],
+            [type]: type === "text" ? value : value ? Number(value) : undefined,
+          },
+        }))
         setCurrentPage(1)
       }, 300),
     []
@@ -150,14 +177,34 @@ export function ResultsTable({ results, columns }: ResultsTableProps) {
                         <div className="w-4 h-4" />
                       )}
                     </div>
-                    {column !== "Structure" && (
+                    {nonNumericalColumns.includes(column) && (
                       <Input
                         type="text"
-                        defaultValue={columnFilters[column] || ""}
-                        onChange={(e) => debouncedFilterChange(column, e.target.value)}
+                        defaultValue={filters[column]?.text || ""}
+                        onChange={(e) => debouncedFilterChange(column, "text", e.target.value)}
                         className="text-sm h-7 w-32 py-1 px-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                         onClick={(e) => e.stopPropagation()}
                       />
+                    )}
+                    {!nonNumericalColumns.includes(column) && (
+                      <div className="flex gap-1">
+                        <Input
+                          type="number"
+                          placeholder="Min"
+                          value={filters[column]?.min || ""}
+                          onChange={(e) => debouncedFilterChange(column, "min", e.target.value)}
+                          className="text-sm h-7 w-16 py-1 px-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                        <Input
+                          type="number"
+                          placeholder="Max"
+                          value={filters[column]?.max || ""}
+                          onChange={(e) => debouncedFilterChange(column, "max", e.target.value)}
+                          className="text-sm h-7 w-16 py-1 px-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </div>
                     )}
                   </TableHead>
                 ))}
