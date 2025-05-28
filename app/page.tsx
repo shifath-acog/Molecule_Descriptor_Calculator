@@ -13,40 +13,39 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative container mx-auto px-6 py-20 text-center">
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          {/* Optional background image or gradient could go here */}
-        </div>
+      <section className="relative container mx-auto px-6 py-20 text-center mb-0">
+  {/* Background Image */}
+  <div className="absolute inset-0 z-0">
+    {/* Optional background image or gradient could go here */}
+  </div>
 
-        {/* Content */}
-        <div className="relative z-10 max-w-6xl mx-auto">
-          {/* Heading with neutral accent */}
-          <h1 className="relative text-7xl font-extrabold text-gray-900 leading-tight mb-10 animate__animated animate__fadeIn animate__delay-1s">
-  <span className="absolute left-0 top-0 text-gray-900 opacity-10 blur-sm">Molecular Descriptor Calculator</span>
-  <span className="relative">Molecular Descriptor Calculator</span>
-</h1>
+  {/* Content */}
+  <div className="relative z-10 max-w-6xl mx-auto">
+    {/* Heading with neutral accent */}
+    <h1 className="text-[6.5rem] font-extrabold text-gray-900 leading-tight mb-0 animate__animated animate__fadeIn animate__delay-1s ml-10 font-weight-500">
+      MolScreener
+    </h1>
 
 
           {/* Description */}
-          <p className="text-lg text-gray-600 mb-10 animate__animated animate__fadeIn animate__delay-2s">
-            Upload your CSV with SMILES strings and generate powerful molecular descriptors effortlessly.
+          <p className="text-xl text-gray-600 mb-10 animate__animated animate__fadeIn animate__delay-2s">
+          Filtering high-quality, medchem-ready drug candidates from AI-generated or virtually screened molecules.
           </p>
 
           {/* Call to Action */}
           <div className="flex justify-center gap-4">
-            <a
+            {/* <a
               href="#calculator"
               className="px-6 py-3 bg-white text-black font-semibold rounded-lg border border-gray-300 shadow-lg hover:shadow-xl hover:bg-gray-100 transition-all duration-300 ease-in-out animate__animated animate__fadeIn animate__delay-3s"
             >
               Get Started
-            </a>
+            </a> */}
           </div>
         </div>
       </section>
 
       {/* Descriptor Calculator Section */}
-      <section id="calculator" className="container mx-auto py-12 px-4">
+      <section id="calculator" className="container mx-auto py-0 px-4">
         <DescriptorCalculator />
       </section>
     </main>
