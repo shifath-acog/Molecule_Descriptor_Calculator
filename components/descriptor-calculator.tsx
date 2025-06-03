@@ -130,7 +130,7 @@ export function DescriptorCalculator() {
             </div>
           </div>
           {/*add a small text that says "calculate descriptors or filter" */}
-          <p className="text-sm text-gray-500 dark:text-gray-400 ml-4 mt-0 mb-0">
+          <p className="text-sm text-gray-500 dark:text-gray-400 ml-4">
             You can either calculate descriptors or apply filters to your dataset.
           </p>
           {/* Tabs for Descriptor Calculation and Filter */}
