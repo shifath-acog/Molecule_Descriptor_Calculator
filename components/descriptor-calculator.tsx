@@ -129,7 +129,10 @@ export function DescriptorCalculator() {
               />
             </div>
           </div>
-
+          {/*add a small text that says "calculate descriptors or filter" */}
+          <p className="text-sm text-gray-500 dark:text-gray-400 ml-4 mt-0 mb-0">
+            You can either calculate descriptors or apply filters to your dataset.
+          </p>
           {/* Tabs for Descriptor Calculation and Filter */}
           <Tabs defaultValue="calculate" className="w-full">
             <TabsList className="grid w-full grid-cols-2 bg-gray-100 dark:bg-gray-700">
@@ -210,7 +213,7 @@ export function DescriptorCalculator() {
                 Processing...
               </>
             ) : (
-              "Calculate Descriptors"
+              "Submit"
             )}
           </Button>
         </div>
